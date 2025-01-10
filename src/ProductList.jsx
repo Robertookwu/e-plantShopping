@@ -1,10 +1,13 @@
 import React, { useState,useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
+import { addItem, removeItem, updateQuantity } from './CartSlice';
+import { useDispatch } from 'react-redux';
 function ProductList() {
     const [showCart, setShowCart] = useState(false); 
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-
+    const [addedToCart, setAddedToCart] = useState({});
+    const dispatch = useDispatch();
     const plantsArray = [
         {
             category: "Air Purifying Plants",
@@ -246,6 +249,14 @@ const handlePlantsClick = (e) => {
     e.preventDefault();
     setShowCart(false);
   };
+
+  const handleAddToCart = (product) => {
+    dispatch(addItem(product));
+    setAddedToCart((prevState) => ({
+       ...prevState,
+       [product.name]: true, // Set the product name as key and value as true to indicate it's added to cart
+     }));
+  };
     return (
         <div>
              <div className="navbar" style={styleObj}>
@@ -268,7 +279,24 @@ const handlePlantsClick = (e) => {
         </div>
         {!showCart? (
         <div className="product-grid">
-
+            {plantsArray.map((type, mainIndex) => {
+                return(<>
+                    <ul className="product-list ul">
+                        <h3 className=''>{type.category}</h3>
+                        {type.plants.map((plant,index) => {
+                            return(
+                                <li key={`${mainIndex}-${index}`} className="product-card" >
+                                    <h4 className='product-title'>{plant.name}</h4>
+                                    <img className='product-image' src={plant.image} />
+                                    <span className='product-price'>{plant.cost}</span>
+                                    <p className=''>{plant.description}</p>
+                                    <button onClick={()=>handleAddToCart(plantsArray[mainIndex].plants[index])} className='product-button'>Add to cart</button>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </>);     
+            })}
 
         </div>
  ) :  (
