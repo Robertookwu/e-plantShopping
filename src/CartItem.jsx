@@ -37,9 +37,6 @@ const CartItem = ({ onContinueShopping }) => {
 
   const handleRemove = (item) => {
     dispatch(removeItem(item));
-    const btnId = item.name.split(" ").join('-');
-    const button = document.getElementById(btnId);
-    button.classList.remove("added-to-cart");
   };
 
   // Calculate total cost based on quantity for an item
